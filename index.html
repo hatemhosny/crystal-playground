@@ -10,7 +10,7 @@
     />
     <link
       rel="icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16,3L29,13L16,29L3,13Z' fill='%236366f1'/><path d='M16,3L29,13L16,29L3,13Z' fill='none' stroke='%23a5b4fc'/><path d='M3,13L29,13M16,3L16,29M16,3L9,13L16,29M16,3L23,13L16,29' fill='none' stroke='%23312e81'/></svg>"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 207.90188 207.90188' width='32' height='32'><defs><filter id='h' x='-50%' y='-50%' width='200%' height='200%'><feDropShadow dx='0' dy='0' stdDeviation='18' flood-color='%23f8fafc' flood-opacity='0.65'/></filter></defs><g filter='url(%23h)'><path d='M105.40984 68.176337 38.309836 86.076337 87.609836 135.27634Z' fill='%23f8fafc'/><path d='m172.40984 122.47634-50 49.9c-.2.2-.5.3-.7.2l-68.300004-18.3c-.3-.1-.5-.3-.5-.5l-18.4-68.200003c-.1-.3 0-.5.2-.7l50-49.899999c.2-.2.5-.3.7-.2l68.300004 18.299999c.3.1.5.3.5.5l18.3 68.200003c.2.3.1.5-.1.7zm-67-54.300003-67.100004 17.9c-.1 0-.2.2-.1.3l49.1 49.000003c.1.1.3.1.3-.1l18.000004-67.000003c.1 0-.1-.2-.2-.1z' fill='%23000'/></g></svg>"
     />
     <style>
       :root {
@@ -52,9 +52,9 @@
         font-family:
           system-ui,
           -apple-system,
-          'Segoe UI',
+          "Segoe UI",
           Roboto,
-          'Helvetica Neue',
+          "Helvetica Neue",
           sans-serif;
         -webkit-font-smoothing: antialiased;
       }
@@ -83,6 +83,15 @@
 
       .brand svg {
         flex: none;
+        filter: drop-shadow(0 0 4px rgba(248, 250, 252, 0.65));
+      }
+
+      .logo-gem {
+        fill: #000;
+      }
+
+      .logo-facet {
+        fill: #f8fafc;
       }
 
       .brand h1 {
@@ -161,7 +170,7 @@
       }
 
       .select::after {
-        content: '';
+        content: "";
         position: absolute;
         right: 13px;
         top: 50%;
@@ -314,7 +323,7 @@
         opacity: 1;
       }
 
-      #status[data-kind='error'] {
+      #status[data-kind="error"] {
         color: var(--warn);
       }
 
@@ -358,31 +367,31 @@
   <body>
     <header class="topbar">
       <div class="brand">
-        <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
-          <defs>
-            <linearGradient id="gem" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#818cf8" />
-              <stop offset="1" stop-color="#22d3ee" />
-            </linearGradient>
-          </defs>
-          <path d="M16 3 29 13 16 29 3 13Z" fill="url(#gem)" />
+        <svg
+          viewBox="0 0 207.90188 207.90188"
+          width="26"
+          height="26"
+          aria-hidden="true"
+          focusable="false"
+        >
           <path
-            d="M3 13h26M16 3v26M16 3 9 13l7 16M16 3l7 10-7 16"
-            fill="none"
-            stroke="rgba(0,0,0,.28)"
-            stroke-width="0.9"
+            class="logo-facet"
+            d="M105.40984 68.176337 38.309836 86.076337 87.609836 135.27634Z"
           />
-          <path d="M16 3 29 13 16 29 3 13Z" fill="none" stroke="rgba(255,255,255,.35)" />
+          <path
+            class="logo-gem"
+            d="m172.40984 122.47634-50 49.9c-.2.2-.5.3-.7.2l-68.300004-18.3c-.3-.1-.5-.3-.5-.5l-18.4-68.200003c-.1-.3 0-.5.2-.7l50-49.899999c.2-.2.5-.3.7-.2l68.300004 18.299999c.3.1.5.3.5.5l18.3 68.200003c.2.3.1.5-.1.7zm-67-54.300003-67.100004 17.9c-.1 0-.2.2-.1.3l49.1 49.000003c.1.1.3.1.3-.1l18.000004-67.000003c.1 0-.1-.2-.2-.1z"
+          />
         </svg>
         <h1>Crystal Playground</h1>
-        <span class="tag">Wasm</span>
       </div>
       <nav class="links">
-        <a href="https://crystal-lang.org/reference/" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://crystal-lang.org/reference/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Language reference ↗
-        </a>
-        <a href="https://livecodes.io/docs" target="_blank" rel="noopener noreferrer">
-          Powered by LiveCodes ↗
         </a>
       </nav>
     </header>
@@ -396,14 +405,38 @@
       </div>
       <p class="hint" id="hint"></p>
       <div class="actions">
-        <button type="button" class="btn primary" id="run" title="Compile and run (Ctrl/Cmd + Enter)">
+        <button
+          type="button"
+          class="btn primary"
+          id="run"
+          title="Compile and run (Ctrl/Cmd + Enter)"
+        >
           ▶ Run
         </button>
-        <button type="button" class="btn" id="reset" title="Reset the current example">Reset</button>
-        <button type="button" class="btn ghost" id="open" title="Open this code in the LiveCodes app">
+        <button
+          type="button"
+          class="btn"
+          id="reset"
+          title="Reset the current example"
+        >
+          Reset
+        </button>
+        <button
+          type="button"
+          class="btn ghost"
+          id="open"
+          title="Open this code in the LiveCodes app"
+        >
           Open in LiveCodes
         </button>
-        <button type="button" class="btn" id="share" title="Copy a link to this exact code">Share</button>
+        <button
+          type="button"
+          class="btn"
+          id="share"
+          title="Copy a link to this exact code"
+        >
+          Share
+        </button>
       </div>
     </div>
 
@@ -412,10 +445,7 @@
     </main>
 
     <footer class="statusbar">
-      <span class="note">
-        Crystal runs fully in your browser. The first run downloads ~22&nbsp;MB of compiler, linker and
-        standard library; later runs are served from the cache.
-      </span>
+      <span class="note">Crystal runs fully in your browser.</span>
       <span id="status" role="status" aria-live="polite"></span>
     </footer>
 
@@ -425,15 +455,15 @@
         compress,
         decompress,
         getPlaygroundUrl,
-      } from 'https://cdn.jsdelivr.net/npm/livecodes';
+      } from "https://cdn.jsdelivr.net/npm/livecodes";
 
-      const APP_URL = 'https://dev.livecodes.io';
-      const LANGUAGE = 'crystal-wasm';
+      const APP_URL = "https://dev.livecodes.io";
+      const LANGUAGE = "crystal-wasm";
 
       const SAMPLES = [
         {
-          label: 'Hello, World!',
-          hint: 'Strings, interpolation and type inference.',
+          label: "Hello, World!",
+          hint: "Strings, interpolation and type inference.",
           code: `# Crystal is a statically typed, compiled language with a Ruby-like syntax.
 puts "Hello, World!"
 
@@ -447,8 +477,8 @@ puts "pi rounded to 4 places: #{3.14159.round(4)}"
 `,
         },
         {
-          label: 'Variables & types',
-          hint: 'Value types, explicit annotations and union types.',
+          label: "Variables & types",
+          hint: "Value types, explicit annotations and union types.",
           code: `greeting = "Hello"        # String
 pi = 3.14159              # Float64
 count = 10                # Int32
@@ -472,8 +502,8 @@ puts "value = #{value.inspect} (#{value.class})"
 `,
         },
         {
-          label: 'FizzBuzz',
-          hint: 'Conditionals, case expressions and ranges.',
+          label: "FizzBuzz",
+          hint: "Conditionals, case expressions and ranges.",
           code: `# case is an expression: it returns the value of the matched branch
 1.upto(20) do |n|
   word = case
@@ -487,8 +517,8 @@ end
 `,
         },
         {
-          label: 'Methods, overloads & blocks',
-          hint: 'Type restrictions, default arguments, overloading and blocks.',
+          label: "Methods, overloads & blocks",
+          hint: "Type restrictions, default arguments, overloading and blocks.",
           code: `# Methods can have type restrictions, default arguments and return types
 def greet(name : String, greeting = "Hello") : String
   "#{greeting}, #{name}!"
@@ -523,8 +553,8 @@ puts "apply(21) { |n| n * 2 } = #{apply(21) { |n| n * 2 }}"
 `,
         },
         {
-          label: 'Recursion & memoization',
-          hint: 'Recursive methods and hashes as caches.',
+          label: "Recursion & memoization",
+          hint: "Recursive methods and hashes as caches.",
           code: `# A memo hash is threaded through the recursive calls
 def fib(n : Int32, memo = {} of Int32 => Int64) : Int64
   return n.to_i64 if n < 2
@@ -543,8 +573,8 @@ puts "20! = #{factorial(20)}"
 `,
         },
         {
-          label: 'Classes, modules & inheritance',
-          hint: 'Abstract classes, modules, getters and super.',
+          label: "Classes, modules & inheritance",
+          hint: "Abstract classes, modules, getters and super.",
           code: `module Describable
   abstract def describe : String
 end
@@ -585,8 +615,8 @@ animals.each { |animal| puts animal.describe }
 `,
         },
         {
-          label: 'Structs vs classes',
-          hint: 'Value semantics for structs, reference semantics for classes.',
+          label: "Structs vs classes",
+          hint: "Value semantics for structs, reference semantics for classes.",
           code: `# Structs are copied on assignment…
 struct Point
   property x : Int32
@@ -620,8 +650,8 @@ puts "class:   l1 = #{l1.text}   l2 = #{l2.text}"
 `,
         },
         {
-          label: 'Collections & Enumerable',
-          hint: 'Arrays, hashes, blocks and enumerable methods.',
+          label: "Collections & Enumerable",
+          hint: "Arrays, hashes, blocks and enumerable methods.",
           code: `languages = %w[Crystal Ruby Elixir Crystal Rust]
 
 puts "size:   #{languages.size}"
@@ -646,8 +676,8 @@ puts "joined: #{languages.uniq.sort.join(" | ")}"
 `,
         },
         {
-          label: 'Macros & generics',
-          hint: 'Compile-time code generation and generic methods.',
+          label: "Macros & generics",
+          hint: "Compile-time code generation and generic methods.",
           code: `# Macros run at compile time and generate code
 macro attr_readers(*names)
   {% for name in names %}
@@ -680,48 +710,51 @@ puts first_of([] of String).inspect
       ];
 
       const playgroundConfig = (code) => ({
-        title: 'Crystal Playground',
-        description: 'Crystal, compiled to WebAssembly and running in the browser.',
-        mode: 'simple',
-        activeEditor: 'script',
-        editor: 'monaco',
-        theme: 'dark',
-        fontSize: 14,
+        title: "Crystal Playground",
+        description:
+          "Crystal, compiled to WebAssembly and running in the browser.",
+        mode: "simple",
+        activeEditor: "script",
+        editor: "auto",
+        theme: "dark",
         autoupdate: false,
-        allowLangChange: false,
         markup: {
-          language: 'html',
-          content: '<p class="note">Crystal output is printed to the console.</p>',
+          language: "html",
+          content:
+            '<p class="note">Crystal output is printed to the console.</p>',
         },
         style: {
-          language: 'css',
+          language: "css",
           content:
-            'body{margin:0;display:grid;place-items:center;height:100vh;background:#131417;color:#8b93a1;font:14px/1.6 system-ui,sans-serif}',
+            "body{margin:0;display:grid;place-items:center;height:100vh;background:#131417;color:#8b93a1;font:14px/1.6 system-ui,sans-serif}",
         },
-        script: { language: LANGUAGE, title: 'Crystal', content: code },
-        tools: { status: 'full' },
+        script: { language: LANGUAGE, title: "Crystal", content: code },
+        tools: { status: "full" },
       });
 
       const elements = {
-        playground: document.getElementById('playground'),
-        samples: document.getElementById('samples'),
-        hint: document.getElementById('hint'),
-        run: document.getElementById('run'),
-        reset: document.getElementById('reset'),
-        open: document.getElementById('open'),
-        share: document.getElementById('share'),
-        status: document.getElementById('status'),
+        playground: document.getElementById("playground"),
+        samples: document.getElementById("samples"),
+        hint: document.getElementById("hint"),
+        run: document.getElementById("run"),
+        reset: document.getElementById("reset"),
+        open: document.getElementById("open"),
+        share: document.getElementById("share"),
+        status: document.getElementById("status"),
       };
 
       let statusTimer;
 
-      const setStatus = (message, kind = 'info') => {
+      const setStatus = (message, kind = "info") => {
         clearTimeout(statusTimer);
         elements.status.textContent = message;
         elements.status.dataset.kind = kind;
-        elements.status.classList.toggle('visible', Boolean(message));
-        if (message && kind !== 'error') {
-          statusTimer = setTimeout(() => elements.status.classList.remove('visible'), 4000);
+        elements.status.classList.toggle("visible", Boolean(message));
+        if (message && kind !== "error") {
+          statusTimer = setTimeout(
+            () => elements.status.classList.remove("visible"),
+            4000,
+          );
         }
       };
 
@@ -744,16 +777,16 @@ puts first_of([] of String).inspect
         } catch {
           // clipboard API is unavailable in some contexts; fall back below
         }
-        const textarea = document.createElement('textarea');
+        const textarea = document.createElement("textarea");
         textarea.value = text;
-        textarea.setAttribute('readonly', '');
-        textarea.style.position = 'fixed';
-        textarea.style.top = '-1000px';
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "fixed";
+        textarea.style.top = "-1000px";
         document.body.append(textarea);
         textarea.select();
         let copied = false;
         try {
-          copied = document.execCommand('copy');
+          copied = document.execCommand("copy");
         } catch {
           copied = false;
         }
@@ -770,7 +803,9 @@ puts first_of([] of String).inspect
 
       /** Reset only applies while an example is selected (not custom code from a link). */
       const syncControls = () => {
-        elements.reset.disabled = !Number.isInteger(Number(elements.samples.value));
+        elements.reset.disabled = !Number.isInteger(
+          Number(elements.samples.value),
+        );
       };
 
       const selectSample = async (index, { run = true } = {}) => {
@@ -782,27 +817,33 @@ puts first_of([] of String).inspect
         elements.samples.title = sample.hint;
         syncControls();
         if (!playground) return;
-        setStatus('Compiling…');
+        setStatus("Compiling…");
         try {
           await playground.setConfig({
-            script: { language: LANGUAGE, title: 'Crystal', content: sample.code },
+            script: {
+              language: LANGUAGE,
+              title: "Crystal",
+              content: sample.code,
+            },
           });
           if (run) await playground.run();
-          setStatus('');
+          setStatus("");
         } catch (error) {
-          setStatus(`Run failed: ${error}`, 'error');
+          setStatus(`Run failed: ${error}`, "error");
         }
       };
 
       // point the dropdown at the example that matches the shared code, if any
       let initialHint = SAMPLES[0].hint;
       if (shared) {
-        const sharedCode = shared.script?.content ?? '';
-        const sharedIndex = SAMPLES.findIndex((sample) => sample.code.trim() === sharedCode.trim());
+        const sharedCode = shared.script?.content ?? "";
+        const sharedIndex = SAMPLES.findIndex(
+          (sample) => sample.code.trim() === sharedCode.trim(),
+        );
         if (sharedIndex === -1) {
-          elements.samples.add(new Option('Custom code (from link)', 'custom'));
-          elements.samples.value = 'custom';
-          initialHint = 'Code loaded from a shared link.';
+          elements.samples.add(new Option("Custom code (from link)", "custom"));
+          elements.samples.value = "custom";
+          initialHint = "Code loaded from a shared link.";
         } else {
           elements.samples.value = String(sharedIndex);
           initialHint = SAMPLES[sharedIndex].hint;
@@ -814,47 +855,47 @@ puts first_of([] of String).inspect
       syncControls();
 
       try {
-        playground = await createPlayground('#playground', {
+        playground = await createPlayground("#playground", {
           appUrl: APP_URL,
-          loading: 'eager',
+          loading: "eager",
           config: shared ?? playgroundConfig(SAMPLES[0].code),
         });
       } catch (error) {
-        setStatus(`Could not load the playground: ${error}`, 'error');
+        setStatus(`Could not load the playground: ${error}`, "error");
       }
 
-      elements.samples.addEventListener('change', () => {
+      elements.samples.addEventListener("change", () => {
         selectSample(Number(elements.samples.value));
       });
 
-      elements.run.addEventListener('click', async () => {
+      elements.run.addEventListener("click", async () => {
         if (!playground) return;
-        setStatus('Compiling…');
+        setStatus("Compiling…");
         try {
           await playground.run();
-          setStatus('');
+          setStatus("");
         } catch (error) {
-          setStatus(`Run failed: ${error}`, 'error');
+          setStatus(`Run failed: ${error}`, "error");
         }
       });
 
-      elements.reset.addEventListener('click', () => {
+      elements.reset.addEventListener("click", () => {
         const index = Number(elements.samples.value);
         if (Number.isInteger(index)) selectSample(index);
       });
 
-      elements.open.addEventListener('click', async () => {
+      elements.open.addEventListener("click", async () => {
         if (!playground) return;
         try {
           const config = await playground.getConfig();
           const url = getPlaygroundUrl({ appUrl: APP_URL, config });
-          window.open(url, '_blank', 'noopener');
+          window.open(url, "_blank", "noopener");
         } catch (error) {
-          setStatus(`Could not open the playground: ${error}`, 'error');
+          setStatus(`Could not open the playground: ${error}`, "error");
         }
       });
 
-      elements.share.addEventListener('click', async () => {
+      elements.share.addEventListener("click", async () => {
         if (!playground) return;
         const shareButton = elements.share;
         shareButton.disabled = true;
@@ -864,20 +905,23 @@ puts first_of([] of String).inspect
           url.hash = compress(JSON.stringify(config));
           const copied = await copyToClipboard(url.href);
           if (copied) {
-            setStatus('Shareable link copied to the clipboard ✓');
+            setStatus("Shareable link copied to the clipboard ✓");
           } else {
-            setStatus('Copying failed — the link is in the address bar', 'error');
+            setStatus(
+              "Copying failed — the link is in the address bar",
+              "error",
+            );
             location.hash = url.hash;
           }
         } catch (error) {
-          setStatus(`Could not create the link: ${error}`, 'error');
+          setStatus(`Could not create the link: ${error}`, "error");
         } finally {
           shareButton.disabled = false;
         }
       });
 
-      addEventListener('keydown', (event) => {
-        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+      addEventListener("keydown", (event) => {
+        if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
           event.preventDefault();
           elements.run.click();
         }
