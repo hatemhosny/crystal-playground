@@ -1,0 +1,887 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crystal Playground</title>
+    <meta
+      name="description"
+      content="A browser playground for the Crystal programming language, powered by LiveCodes. Crystal is compiled to WebAssembly and runs entirely client-side."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16,3L29,13L16,29L3,13Z' fill='%236366f1'/><path d='M16,3L29,13L16,29L3,13Z' fill='none' stroke='%23a5b4fc'/><path d='M3,13L29,13M16,3L16,29M16,3L9,13L16,29M16,3L23,13L16,29' fill='none' stroke='%23312e81'/></svg>"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #101116;
+        --surface: #17181d;
+        --surface-2: #1f2127;
+        --surface-3: #282b33;
+        --border: #2a2d35;
+        --border-strong: #3a3e48;
+        --text: #e7e9ee;
+        --muted: #9ba1ad;
+        --accent: #6366f1;
+        --accent-hover: #7b7df4;
+        --accent-text: #ffffff;
+        --ok: #4ade80;
+        --warn: #fbbf24;
+        --radius: 10px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        margin: 0;
+        height: 100vh;
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          system-ui,
+          -apple-system,
+          'Segoe UI',
+          Roboto,
+          'Helvetica Neue',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      /* ---------- top bar ---------- */
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 10px 16px;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .brand svg {
+        flex: none;
+      }
+
+      .brand h1 {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+        white-space: nowrap;
+      }
+
+      .brand p {
+        margin: 0;
+        font-size: 12px;
+        color: var(--muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .tag {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        padding: 2px 7px;
+        border-radius: 999px;
+        color: #c7d2fe;
+        background: #312e81;
+        border: 1px solid #4338ca;
+      }
+
+      .links {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-size: 13px;
+      }
+
+      .links a {
+        color: var(--muted);
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      .links a:hover {
+        color: var(--text);
+        text-decoration: underline;
+      }
+
+      /* ---------- toolbar ---------- */
+
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 16px;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .field {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: none;
+      }
+
+      .field > label {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .select {
+        position: relative;
+      }
+
+      .select::after {
+        content: '';
+        position: absolute;
+        right: 13px;
+        top: 50%;
+        width: 6px;
+        height: 6px;
+        border-right: 1.5px solid var(--muted);
+        border-bottom: 1.5px solid var(--muted);
+        transform: translateY(-70%) rotate(45deg);
+        pointer-events: none;
+      }
+
+      select {
+        appearance: none;
+        font: inherit;
+        font-size: 13px;
+        color: var(--text);
+        background: var(--surface-2);
+        border: 1px solid var(--border-strong);
+        border-radius: 8px;
+        padding: 8px 34px 8px 12px;
+        min-width: 200px;
+        max-width: 100%;
+        cursor: pointer;
+      }
+
+      select:hover {
+        background: var(--surface-3);
+      }
+
+      select:focus-visible,
+      .btn:focus-visible,
+      .links a:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .hint {
+        flex: 1 1 auto;
+        min-width: 0;
+        font-size: 12px;
+        color: var(--muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .actions {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: none;
+      }
+
+      .btn {
+        font: inherit;
+        font-size: 13px;
+        line-height: 1;
+        color: var(--text);
+        background: var(--surface-2);
+        border: 1px solid var(--border-strong);
+        border-radius: 8px;
+        padding: 9px 14px;
+        cursor: pointer;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+      }
+
+      .btn:hover {
+        background: var(--surface-3);
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+
+      .btn.primary {
+        color: var(--accent-text);
+        background: var(--accent);
+        border-color: var(--accent);
+        font-weight: 600;
+      }
+
+      .btn.primary:hover {
+        background: var(--accent-hover);
+        border-color: var(--accent-hover);
+      }
+
+      .btn.ghost {
+        background: transparent;
+        border-color: transparent;
+        color: var(--muted);
+      }
+
+      .btn.ghost:hover {
+        background: var(--surface-2);
+        color: var(--text);
+      }
+
+      /* ---------- playground ---------- */
+
+      .stage {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+        padding: 12px;
+        background: var(--bg);
+      }
+
+      #playground {
+        flex: 1 1 auto;
+        min-width: 0;
+        min-height: 0;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      /* ---------- status bar ---------- */
+
+      .statusbar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 16px;
+        font-size: 12px;
+        color: var(--muted);
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+      }
+
+      .statusbar .note {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      #status {
+        margin-left: auto;
+        flex: none;
+        color: var(--ok);
+        opacity: 0;
+        transition: opacity 0.15s ease-in-out;
+      }
+
+      #status.visible {
+        opacity: 1;
+      }
+
+      #status[data-kind='error'] {
+        color: var(--warn);
+      }
+
+      @media (max-width: 860px) {
+        .hint,
+        .brand p {
+          display: none;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .toolbar {
+          flex-wrap: wrap;
+        }
+
+        .select select {
+          min-width: 0;
+          width: 100%;
+        }
+
+        .field {
+          flex: 1 1 100%;
+        }
+
+        .field .select {
+          flex: 1 1 auto;
+        }
+
+        .actions {
+          margin-left: 0;
+          flex: 1 1 100%;
+          justify-content: flex-end;
+        }
+
+        .links {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+          <defs>
+            <linearGradient id="gem" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#818cf8" />
+              <stop offset="1" stop-color="#22d3ee" />
+            </linearGradient>
+          </defs>
+          <path d="M16 3 29 13 16 29 3 13Z" fill="url(#gem)" />
+          <path
+            d="M3 13h26M16 3v26M16 3 9 13l7 16M16 3l7 10-7 16"
+            fill="none"
+            stroke="rgba(0,0,0,.28)"
+            stroke-width="0.9"
+          />
+          <path d="M16 3 29 13 16 29 3 13Z" fill="none" stroke="rgba(255,255,255,.35)" />
+        </svg>
+        <h1>Crystal Playground</h1>
+        <span class="tag">Wasm</span>
+      </div>
+      <nav class="links">
+        <a href="https://crystal-lang.org/reference/" target="_blank" rel="noopener noreferrer">
+          Language reference ↗
+        </a>
+        <a href="https://livecodes.io/docs" target="_blank" rel="noopener noreferrer">
+          Powered by LiveCodes ↗
+        </a>
+      </nav>
+    </header>
+
+    <div class="toolbar">
+      <div class="field">
+        <label for="samples">Example</label>
+        <div class="select">
+          <select id="samples"></select>
+        </div>
+      </div>
+      <p class="hint" id="hint"></p>
+      <div class="actions">
+        <button type="button" class="btn primary" id="run" title="Compile and run (Ctrl/Cmd + Enter)">
+          ▶ Run
+        </button>
+        <button type="button" class="btn" id="reset" title="Reset the current example">Reset</button>
+        <button type="button" class="btn ghost" id="open" title="Open this code in the LiveCodes app">
+          Open in LiveCodes
+        </button>
+        <button type="button" class="btn" id="share" title="Copy a link to this exact code">Share</button>
+      </div>
+    </div>
+
+    <main class="stage">
+      <div id="playground" data-default-styles="false"></div>
+    </main>
+
+    <footer class="statusbar">
+      <span class="note">
+        Crystal runs fully in your browser. The first run downloads ~22&nbsp;MB of compiler, linker and
+        standard library; later runs are served from the cache.
+      </span>
+      <span id="status" role="status" aria-live="polite"></span>
+    </footer>
+
+    <script type="module">
+      import {
+        createPlayground,
+        compress,
+        decompress,
+        getPlaygroundUrl,
+      } from 'https://cdn.jsdelivr.net/npm/livecodes';
+
+      const APP_URL = 'https://dev.livecodes.io';
+      const LANGUAGE = 'crystal-wasm';
+
+      const SAMPLES = [
+        {
+          label: 'Hello, World!',
+          hint: 'Strings, interpolation and type inference.',
+          code: `# Crystal is a statically typed, compiled language with a Ruby-like syntax.
+puts "Hello, World!"
+
+name = "Crystal"
+puts "Hello, #{name}! — string interpolation works like Ruby."
+
+# Types are inferred, but everything is checked at compile time:
+answer = 42
+puts "answer = #{answer} (#{answer.class})"
+puts "pi rounded to 4 places: #{3.14159.round(4)}"
+`,
+        },
+        {
+          label: 'Variables & types',
+          hint: 'Value types, explicit annotations and union types.',
+          code: `greeting = "Hello"        # String
+pi = 3.14159              # Float64
+count = 10                # Int32
+big = 9_000_000_000_i64   # Int64, digits can be underscored
+flag = true               # Bool
+missing = nil             # Nil
+
+puts "#{greeting}: pi=#{pi}, count=#{count}, big=#{big}, flag=#{flag}, nil=#{missing.inspect}"
+
+# A variable may hold a union of types…
+value : Int32 | String = 7
+
+# …and the compiler narrows the type inside each branch
+case value
+when Int32  then puts "#{value} doubled is #{value * 2}"
+when String then puts value.upcase
+end
+
+value = "now a string"
+puts "value = #{value.inspect} (#{value.class})"
+`,
+        },
+        {
+          label: 'FizzBuzz',
+          hint: 'Conditionals, case expressions and ranges.',
+          code: `# case is an expression: it returns the value of the matched branch
+1.upto(20) do |n|
+  word = case
+         when n % 15 == 0 then "FizzBuzz"
+         when n % 3 == 0  then "Fizz"
+         when n % 5 == 0  then "Buzz"
+         else                  n.to_s
+         end
+  puts word
+end
+`,
+        },
+        {
+          label: 'Methods, overloads & blocks',
+          hint: 'Type restrictions, default arguments, overloading and blocks.',
+          code: `# Methods can have type restrictions, default arguments and return types
+def greet(name : String, greeting = "Hello") : String
+  "#{greeting}, #{name}!"
+end
+
+# Overloading by argument type
+def describe(value : Int32) : String
+  "#{value} is an Int32"
+end
+
+def describe(value : String) : String
+  "#{value.inspect} is a String"
+end
+
+puts greet("World")
+puts greet("Crystal", "Hey")
+puts describe(42)
+puts describe("forty-two")
+
+# Methods can take blocks, and capture them as procs
+def twice
+  2.times { yield }
+end
+
+twice { puts "  …and again" }
+
+def apply(value : Int32, &block : Int32 -> Int32) : Int32
+  block.call(value)
+end
+
+puts "apply(21) { |n| n * 2 } = #{apply(21) { |n| n * 2 }}"
+`,
+        },
+        {
+          label: 'Recursion & memoization',
+          hint: 'Recursive methods and hashes as caches.',
+          code: `# A memo hash is threaded through the recursive calls
+def fib(n : Int32, memo = {} of Int32 => Int64) : Int64
+  return n.to_i64 if n < 2
+  memo[n] ||= fib(n - 1, memo) + fib(n - 2, memo)
+end
+
+puts (0..10).map { |n| fib(n) }.join(", ")
+puts "fib(90) = #{fib(90)}"
+
+def factorial(n : Int32) : Int64
+  return 1_i64 if n <= 1
+  n.to_i64 * factorial(n - 1)
+end
+
+puts "20! = #{factorial(20)}"
+`,
+        },
+        {
+          label: 'Classes, modules & inheritance',
+          hint: 'Abstract classes, modules, getters and super.',
+          code: `module Describable
+  abstract def describe : String
+end
+
+abstract class Animal
+  include Describable
+
+  getter name : String
+
+  def initialize(@name : String)
+  end
+
+  abstract def sound : String
+
+  def describe : String
+    %(#{name} says "#{sound}")
+  end
+end
+
+class Dog < Animal
+  def sound : String
+    "Woof"
+  end
+end
+
+class Cat < Animal
+  def sound : String
+    "Meow"
+  end
+
+  def describe : String
+    "#{super} (reluctantly)"
+  end
+end
+
+animals : Array(Animal) = [Dog.new("Rex"), Cat.new("Tom")]
+animals.each { |animal| puts animal.describe }
+`,
+        },
+        {
+          label: 'Structs vs classes',
+          hint: 'Value semantics for structs, reference semantics for classes.',
+          code: `# Structs are copied on assignment…
+struct Point
+  property x : Int32
+  property y : Int32
+
+  def initialize(@x : Int32, @y : Int32)
+  end
+
+  def to_s(io : IO)
+    io << "(#{x}, #{y})"
+  end
+end
+
+# …while classes are passed by reference
+class Label
+  property text : String
+
+  def initialize(@text : String)
+  end
+end
+
+p1 = Point.new(1, 2)
+p2 = p1          # a copy
+p2.x = 99
+puts "struct:  p1 = #{p1}   p2 = #{p2}"
+
+l1 = Label.new("shared")
+l2 = l1          # the same object
+l2.text = "changed"
+puts "class:   l1 = #{l1.text}   l2 = #{l2.text}"
+`,
+        },
+        {
+          label: 'Collections & Enumerable',
+          hint: 'Arrays, hashes, blocks and enumerable methods.',
+          code: `languages = %w[Crystal Ruby Elixir Crystal Rust]
+
+puts "size:   #{languages.size}"
+puts "uniq:   #{languages.uniq}"
+puts "sorted: #{languages.uniq.sort}"
+
+scores = {
+  "Crystal" => 95,
+  "Ruby"    => 88,
+  "Rust"    => 91,
+}
+
+scores.each { |name, score| puts "#{name.ljust(8)} #{score}" }
+
+top = scores.max_by { |_name, score| score }
+puts "top score: #{top[0]} (#{top[1]})"
+
+evens = (1..10).select(&.even?)
+puts "evens:  #{evens}"
+puts "sum:    #{evens.sum}"
+puts "joined: #{languages.uniq.sort.join(" | ")}"
+`,
+        },
+        {
+          label: 'Macros & generics',
+          hint: 'Compile-time code generation and generic methods.',
+          code: `# Macros run at compile time and generate code
+macro attr_readers(*names)
+  {% for name in names %}
+    def {{name.id}}
+      @{{name.id}}
+    end
+  {% end %}
+end
+
+class Server
+  attr_readers host, port, tls
+
+  def initialize(@host : String, @port : Int32, @tls : Bool)
+  end
+end
+
+server = Server.new("localhost", 8080, true)
+puts "#{server.host}:#{server.port} (tls: #{server.tls})"
+
+# Methods can be generic over types
+def first_of(items : Array(T)) : T? forall T
+  items.first?
+end
+
+puts first_of([1, 2, 3]).inspect
+puts first_of(%w[a b c]).inspect
+puts first_of([] of String).inspect
+`,
+        },
+      ];
+
+      const playgroundConfig = (code) => ({
+        title: 'Crystal Playground',
+        description: 'Crystal, compiled to WebAssembly and running in the browser.',
+        mode: 'simple',
+        activeEditor: 'script',
+        editor: 'monaco',
+        theme: 'dark',
+        fontSize: 14,
+        autoupdate: false,
+        allowLangChange: false,
+        markup: {
+          language: 'html',
+          content: '<p class="note">Crystal output is printed to the console.</p>',
+        },
+        style: {
+          language: 'css',
+          content:
+            'body{margin:0;display:grid;place-items:center;height:100vh;background:#131417;color:#8b93a1;font:14px/1.6 system-ui,sans-serif}',
+        },
+        script: { language: LANGUAGE, title: 'Crystal', content: code },
+        tools: { status: 'full' },
+      });
+
+      const elements = {
+        playground: document.getElementById('playground'),
+        samples: document.getElementById('samples'),
+        hint: document.getElementById('hint'),
+        run: document.getElementById('run'),
+        reset: document.getElementById('reset'),
+        open: document.getElementById('open'),
+        share: document.getElementById('share'),
+        status: document.getElementById('status'),
+      };
+
+      let statusTimer;
+
+      const setStatus = (message, kind = 'info') => {
+        clearTimeout(statusTimer);
+        elements.status.textContent = message;
+        elements.status.dataset.kind = kind;
+        elements.status.classList.toggle('visible', Boolean(message));
+        if (message && kind !== 'error') {
+          statusTimer = setTimeout(() => elements.status.classList.remove('visible'), 4000);
+        }
+      };
+
+      /** The config of a shared link, if the page was opened from one. */
+      const configFromHash = () => {
+        const hash = location.hash.slice(1);
+        if (!hash) return null;
+        try {
+          const json = decompress(hash);
+          return json ? JSON.parse(json) : null;
+        } catch {
+          return null;
+        }
+      };
+
+      const copyToClipboard = async (text) => {
+        try {
+          await navigator.clipboard.writeText(text);
+          return true;
+        } catch {
+          // clipboard API is unavailable in some contexts; fall back below
+        }
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.top = '-1000px';
+        document.body.append(textarea);
+        textarea.select();
+        let copied = false;
+        try {
+          copied = document.execCommand('copy');
+        } catch {
+          copied = false;
+        }
+        textarea.remove();
+        return copied;
+      };
+
+      SAMPLES.forEach((sample, index) => {
+        elements.samples.add(new Option(sample.label, String(index)));
+      });
+
+      const shared = configFromHash();
+      let playground = null;
+
+      /** Reset only applies while an example is selected (not custom code from a link). */
+      const syncControls = () => {
+        elements.reset.disabled = !Number.isInteger(Number(elements.samples.value));
+      };
+
+      const selectSample = async (index, { run = true } = {}) => {
+        const sample = SAMPLES[index];
+        if (!sample) return;
+        elements.samples.value = String(index);
+        elements.hint.textContent = sample.hint;
+        elements.hint.title = sample.hint;
+        elements.samples.title = sample.hint;
+        syncControls();
+        if (!playground) return;
+        setStatus('Compiling…');
+        try {
+          await playground.setConfig({
+            script: { language: LANGUAGE, title: 'Crystal', content: sample.code },
+          });
+          if (run) await playground.run();
+          setStatus('');
+        } catch (error) {
+          setStatus(`Run failed: ${error}`, 'error');
+        }
+      };
+
+      // point the dropdown at the example that matches the shared code, if any
+      let initialHint = SAMPLES[0].hint;
+      if (shared) {
+        const sharedCode = shared.script?.content ?? '';
+        const sharedIndex = SAMPLES.findIndex((sample) => sample.code.trim() === sharedCode.trim());
+        if (sharedIndex === -1) {
+          elements.samples.add(new Option('Custom code (from link)', 'custom'));
+          elements.samples.value = 'custom';
+          initialHint = 'Code loaded from a shared link.';
+        } else {
+          elements.samples.value = String(sharedIndex);
+          initialHint = SAMPLES[sharedIndex].hint;
+        }
+      }
+      elements.hint.textContent = initialHint;
+      elements.hint.title = initialHint;
+      elements.samples.title = initialHint;
+      syncControls();
+
+      try {
+        playground = await createPlayground('#playground', {
+          appUrl: APP_URL,
+          loading: 'eager',
+          config: shared ?? playgroundConfig(SAMPLES[0].code),
+        });
+      } catch (error) {
+        setStatus(`Could not load the playground: ${error}`, 'error');
+      }
+
+      elements.samples.addEventListener('change', () => {
+        selectSample(Number(elements.samples.value));
+      });
+
+      elements.run.addEventListener('click', async () => {
+        if (!playground) return;
+        setStatus('Compiling…');
+        try {
+          await playground.run();
+          setStatus('');
+        } catch (error) {
+          setStatus(`Run failed: ${error}`, 'error');
+        }
+      });
+
+      elements.reset.addEventListener('click', () => {
+        const index = Number(elements.samples.value);
+        if (Number.isInteger(index)) selectSample(index);
+      });
+
+      elements.open.addEventListener('click', async () => {
+        if (!playground) return;
+        try {
+          const config = await playground.getConfig();
+          const url = getPlaygroundUrl({ appUrl: APP_URL, config });
+          window.open(url, '_blank', 'noopener');
+        } catch (error) {
+          setStatus(`Could not open the playground: ${error}`, 'error');
+        }
+      });
+
+      elements.share.addEventListener('click', async () => {
+        if (!playground) return;
+        const shareButton = elements.share;
+        shareButton.disabled = true;
+        try {
+          const config = await playground.getConfig();
+          const url = new URL(location.href);
+          url.hash = compress(JSON.stringify(config));
+          const copied = await copyToClipboard(url.href);
+          if (copied) {
+            setStatus('Shareable link copied to the clipboard ✓');
+          } else {
+            setStatus('Copying failed — the link is in the address bar', 'error');
+            location.hash = url.hash;
+          }
+        } catch (error) {
+          setStatus(`Could not create the link: ${error}`, 'error');
+        } finally {
+          shareButton.disabled = false;
+        }
+      });
+
+      addEventListener('keydown', (event) => {
+        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+          event.preventDefault();
+          elements.run.click();
+        }
+      });
+    </script>
+  </body>
+</html>
