@@ -713,9 +713,8 @@ puts first_of([] of String).inspect
         title: "Crystal Playground",
         description:
           "Crystal, compiled to WebAssembly and running in the browser.",
-        mode: "simple",
+        mode: "console",
         activeEditor: "script",
-        editor: "auto",
         theme: "dark",
         autoupdate: false,
         markup: {
@@ -729,7 +728,6 @@ puts first_of([] of String).inspect
             "body{margin:0;display:grid;place-items:center;height:100vh;background:#131417;color:#8b93a1;font:14px/1.6 system-ui,sans-serif}",
         },
         script: { language: LANGUAGE, title: "Crystal", content: code },
-        tools: { status: "full" },
       });
 
       const elements = {
